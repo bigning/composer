@@ -472,10 +472,8 @@ class CheckpointSaver(Callback):  # noqa: D101
         # Store before saving so state_dict in checkpoint has reference to latest checkpoint (itself)
         self.all_saved_checkpoints_to_timestamp[save_filename] = state.timestamp
 
-        import time
         time.sleep(1)
         import psutil
-        import os
 
         def get_parent_pid(pid):
             try:
