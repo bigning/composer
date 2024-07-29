@@ -28,6 +28,7 @@ from composer.loggers.mosaicml_logger import (
     MOSAICML_PLATFORM_ENV_VAR,
 )
 from composer.utils import get_free_tcp_port
+import mcli
 
 CLEANUP_TIMEOUT = datetime.timedelta(seconds=30)
 
@@ -403,19 +404,24 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                 if process.poll() is None:
                     # the process is still running
                     all_processes_finished = False
+                    a = datetime.datetime.now()
+                    log.error(f'Rank {global_rank} is still running. {a}')
                     continue
                 else:
                     # return code of 0 implies clean exit
                     if process.returncode != 0:
-                        log.error(f'Rank {global_rank} crashed with exit code {process.returncode}.')
+                        a = datetime.datetime.now()
+                        log.error(f'Rank {global_rank} crashed with exit code {process.returncode}. {a}')
                         process_has_crashed = True
                         break
                     else:
                         # exited cleanly
                         log.info(f'Rank {global_rank} finished successfully.')
+                        a = datetime.datetime.now()
+                        log.error(f'Rank {global_rank} finished successfully. {a}')
             if process_has_crashed or all_processes_finished:
                 break
-            time.sleep(0.1)
+            time.sleep(1)
     except KeyboardInterrupt:
         print('Ctrl-C received; terminating training processes.')
         pass
@@ -517,6 +523,11 @@ def _cleanup_processes(processes: dict[int, subprocess.Popen]):
             # only print the processes that have actually crashed,
             # not the ones that were killed
             _print_process_exit_status(global_rank, process)
+            try:
+                log.error(f"bigning debug stop runs")
+                mcli.api.runs.stop_run(run=os.environ.get('RUN_NAME'), future=True, reason=f'Global rank {global_rank} raised exception')
+            except Exception as e:
+                log.warning(f"can't stop run, get excetpion {e}")
 
 
 def _aggregate_process_returncode(processes: dict[int, subprocess.Popen]) -> int:
