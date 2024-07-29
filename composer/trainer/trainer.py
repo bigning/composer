@@ -1719,7 +1719,6 @@ class Trainer:
 
         self.engine.run_event(Event.BEFORE_LOAD)
 
-        raise RuntimeError("bigning debug raise run time error or rank {exception_rank}")
         exception_rank = 0
         if dist.get_global_rank() == exception_rank:
             raise RuntimeError("bigning debug raise run time error or rank {exception_rank}")
