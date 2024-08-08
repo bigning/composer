@@ -404,7 +404,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                     # the process is still running
                     all_processes_finished = False
                     a = datetime.datetime.now()
-                    log.error(f'bigning debug Rank {global_rank} is still running. {a}')
+                    log.error(f'bigning debug Rank {global_rank} is still running. {a}, pid: {process.pid}')
                     continue
                 else:
                     # return code of 0 implies clean exit

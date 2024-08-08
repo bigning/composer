@@ -580,7 +580,7 @@ class Engine():
             pass
 
         if torch.distributed.get_rank() == 0: 
-            pdb.set_trace()
+            #pdb.set_trace()
             pass
 
         log.debug('Engine closed.')
