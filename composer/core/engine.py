@@ -587,11 +587,11 @@ class Engine():
 
         log.debug('Engine closed.')
         log.debug('==============================\n')
-        log.debug(traceback.format_exc())
+        traceback.print_stack()
         log.debug('============================== list all sub processes ===================\n')
         import psutil
         current_process = psutil.Process()
         children = current_process.children(recursive=True)
         for child in children:
-            log.debug(f'bigning debug Child pid is {child.pid}, name: {psutil.Process(pid).name}')
+            log.debug(f'bigning debug Child pid is {child.pid}, name: {psutil.Process(child.pid).name}')
         log.debug('Closing engine')
