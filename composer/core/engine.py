@@ -65,6 +65,8 @@ will emit a series of traces:
 
 from __future__ import annotations
 
+import torch
+import pdb
 import atexit
 import contextlib
 import logging
@@ -575,6 +577,9 @@ class Engine():
         try:
             state.train_dataloader._iterator._shutdown_workers()  # type: ignore [reportGeneralTypeIssues]
         except:
+            pass
+
+        if torch.distributed.get_rank() == 0: 
             pass
 
         log.debug('Engine closed.')

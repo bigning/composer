@@ -356,8 +356,8 @@ def _launch_processes(
             for arg in training_script_args:
                 cmd.append(os.path.expandvars(os.path.expanduser(arg)))
 
-            log.info(
-                'Launching process for local_rank(%s), global_rank(%s) with command(%s)',
+            log.error(
+                'bigning debug Launching process for local_rank(%s), global_rank(%s) with command(%s)',
                 local_rank,
                 global_rank,
                 cmd,
@@ -369,7 +369,6 @@ def _launch_processes(
                     text=True,
                 )
             else:
-
                 def _get_file(format: str):
                     filename = format.format(
                         rank=global_rank,
@@ -405,7 +404,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                     # the process is still running
                     all_processes_finished = False
                     a = datetime.datetime.now()
-                    log.error(f'Rank {global_rank} is still running. {a}')
+                    log.error(f'bigning debug Rank {global_rank} is still running. {a}')
                     continue
                 else:
                     # return code of 0 implies clean exit
@@ -421,7 +420,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                         log.error(f'Rank {global_rank} finished successfully. {a}')
             if process_has_crashed or all_processes_finished:
                 break
-            time.sleep(1)
+            time.sleep(10)
     except KeyboardInterrupt:
         print('Ctrl-C received; terminating training processes.')
         pass
