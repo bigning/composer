@@ -111,6 +111,7 @@ _did_atexit_run = False
 
 
 def _set_atexit_ran():
+    log.debug(f"bigning debug set at exit run")
     global _did_atexit_run
     _did_atexit_run = True
 
@@ -124,6 +125,7 @@ atexit.register(_set_atexit_ran)
 # functions still run. Composer CLI launcher will give a 30 second grace period before sending
 # SIGKILL.
 def sigterm_handler(signal, frame):
+    log.debug(f"bigning debug sigterm handler {signal=}")
     sys.exit(128 + signal)
 
 
@@ -505,6 +507,7 @@ class Engine():
         self._run_callbacks(event, callbacks)
 
     def __del__(self):
+        log.debug(f'bigning debug del is called')
         global _did_atexit_run
         if _did_atexit_run or self._is_closed:
             # Do not attempt to shutdown again, since close() already ran via __atexit__ or was already invoked
