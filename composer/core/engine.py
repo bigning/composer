@@ -599,4 +599,4 @@ class Engine():
         for child in children:
             log.debug(f'bigning debug Child pid is {child.pid}, name: {psutil.Process(child.pid).name}')
         log.debug('bigning Closed  engine')
-        raise RuntimeError(f"bigning debug raise in _close")
+        #raise RuntimeError(f"bigning debug raise in _close")
