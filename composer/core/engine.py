@@ -118,7 +118,7 @@ def _set_atexit_ran():
 
 # Since atexit calls hooks in LIFO order, this hook will always be invoked after all atexit-triggered
 # _close() calls are invoked
-atexit.register(_set_atexit_ran)
+#atexit.register(_set_atexit_ran)
 
 
 # Catch SIGTERM/SIGINT and instead exit via `sys.exit` using same error code, ensuring atexit
@@ -130,8 +130,9 @@ def sigterm_handler(signal, frame):
 
 
 try:
-    signal.signal(signal.SIGTERM, sigterm_handler)
-    signal.signal(signal.SIGINT, sigterm_handler)
+    #signal.signal(signal.SIGTERM, sigterm_handler)
+    #signal.signal(signal.SIGINT, sigterm_handler)
+    pass
 except ValueError:
     log.warning('Failed to set signal handler. Checkpoints may not be flushed if the process is killed.')
 
@@ -227,7 +228,7 @@ class Engine():
                         ),
                     )
 
-        atexit.register(self._close, state, logger)
+        #atexit.register(self._close, state, logger)
 
     def run_event(
         self,
@@ -591,8 +592,6 @@ class Engine():
         log.debug('Engine closed.')
         log.debug('==============================\n')
         traceback.print_stack()
-        log.debug('==============================\n')
-        traceback.print_tb()
         log.debug('============================== list all sub processes ===================\n')
         import psutil
         current_process = psutil.Process()
