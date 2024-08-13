@@ -507,6 +507,7 @@ class Engine():
         callbacks = [callback for callback in self.state.callbacks if not isinstance(callback, LoggerDestination)]
         self._run_callbacks(event, callbacks)
 
+    """
     def __del__(self):
         log.debug(f'bigning debug del is called')
         global _did_atexit_run
@@ -516,6 +517,7 @@ class Engine():
         self.close()
         atexit.unregister(_set_atexit_ran)
         atexit.unregister(self._close)
+    """
 
     def _debug_log(self, event: Event, msg: str):
         """Helper to include timestamp and event info in log messages."""
