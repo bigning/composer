@@ -2270,6 +2270,9 @@ class Trainer:
 
 
         # bigning debug no problem here
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
 
         # Check Optimizer
         if len(self.state.optimizers) == 0:
@@ -2794,9 +2797,6 @@ class Trainer:
 
         self.engine.run_event(Event.FIT_END)
         self._run_evaluators(Event.FIT_END)
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        torch.distributed.all_reduce(t)
         return
 
     def _eval_train_metrics(self, device_batch):
