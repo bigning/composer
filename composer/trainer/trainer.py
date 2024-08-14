@@ -2403,10 +2403,7 @@ class Trainer:
 
             self.state.evaluators = evaluators
 
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        torch.distributed.all_reduce(t)
-        return
+        # bigning debug no problem here
 
         # Microbatching
         if device_train_microbatch_size is not None:
@@ -2454,6 +2451,10 @@ class Trainer:
             self.state.scaler = ClosureGradScaler() if self._use_closures() else GradScaler()
 
         self.first_batch_complete = False
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
+        return
         self._train_loop()
 
     def close(self):
