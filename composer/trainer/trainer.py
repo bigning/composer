@@ -2609,10 +2609,7 @@ class Trainer:
         finished_epoch_early = False
         last_wct = datetime.datetime.now()
 
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        torch.distributed.all_reduce(t)
-        return
+        # bigning debug no problem
 
         if self.state.max_duration is None:
             # This is essentially just a type check, as max_duration should always be
@@ -2797,6 +2794,10 @@ class Trainer:
 
         self.engine.run_event(Event.FIT_END)
         self._run_evaluators(Event.FIT_END)
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
+        return
 
     def _eval_train_metrics(self, device_batch):
         assert self._train_data_spec is not None, 'The train data spec should be set on __init__ or fit()'
