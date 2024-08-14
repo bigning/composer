@@ -57,9 +57,10 @@ class MlflowMonitorProcess(multiprocessing.Process):
     def run(self):
         from mlflow import MlflowClient
 
+        
         os.setsid()
         # Register the signal handler in the child process
-        signal.signal(signal.SIGTERM, self.handle_sigterm)
+        #signal.signal(signal.SIGTERM, self.handle_sigterm)
 
         while not self.exit_event.wait(10):
             try:
@@ -139,6 +140,7 @@ class MLFlowLogger(LoggerDestination):
         resume: bool = False,
         logging_buffer_seconds: Optional[int] = 10,
     ) -> None:
+        log.debug(f"bigning debug mlflow logger")
         try:
             import mlflow
             from mlflow import MlflowClient
