@@ -2451,10 +2451,7 @@ class Trainer:
             self.state.scaler = ClosureGradScaler() if self._use_closures() else GradScaler()
 
         self.first_batch_complete = False
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        torch.distributed.all_reduce(t)
-        return
+        # bigning debug no problem
         self._train_loop()
 
     def close(self):
@@ -2611,6 +2608,11 @@ class Trainer:
         self.state.model.train()
         finished_epoch_early = False
         last_wct = datetime.datetime.now()
+
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
+        return
 
         if self.state.max_duration is None:
             # This is essentially just a type check, as max_duration should always be
