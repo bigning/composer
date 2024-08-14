@@ -2269,10 +2269,7 @@ class Trainer:
         """
 
 
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        torch.distributed.all_reduce(t)
-        return
+        # bigning debug no problem here
 
         # Check Optimizer
         if len(self.state.optimizers) == 0:
@@ -2405,6 +2402,11 @@ class Trainer:
                     )
 
             self.state.evaluators = evaluators
+
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
+        return
 
         # Microbatching
         if device_train_microbatch_size is not None:
