@@ -2267,6 +2267,13 @@ class Trainer:
             device_train_microbatch_size (int | float | str, optional): See :class:`.Trainer`.
             precision (Precision | str, optional): See :class:`.Trainer`.
         """
+
+
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
+        return
+
         # Check Optimizer
         if len(self.state.optimizers) == 0:
             raise ValueError(
