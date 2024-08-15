@@ -350,7 +350,7 @@ def _launch_processes(
             MASTER_ADDR=master_addr,
             MASTER_PORT=str(master_port),
             PYTHONUNBUFFERED='1',
-            #**nccl_env_variable,
+            **nccl_env_variable,
         ):
             # Populate the distributed variables in all launcher args
             for arg in training_script_args:
