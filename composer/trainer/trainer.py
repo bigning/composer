@@ -1342,11 +1342,14 @@ class Trainer:
             # Deepspeed and FSDP both require torch.distributed to be initialized, even if the world size is 1
             # And torch.distributed is always required for multi-rank training
             dist.initialize_dist(device, dist_timeout)
+        log.debug(f"bigning debug 1 {torch.distributed.is_initialized()=}")
         if parallelism_config is not None:
             # Patch PyTorch to fix distributed bugs
             patch_pytorch()
+            log.debug(f"bigning debug 2 {torch.distributed.is_initialized()=}")
             if auto_microbatching:
                 patch_unshard_for_automicrobatching(auto_microbatch_size_found=False)
+            log.debug(f"bigning debug 3 {torch.distributed.is_initialized()=}")
 
         # Reproducibility
         rank_zero_seed, seed = _distribute_and_get_random_seed(seed, device)
@@ -1402,6 +1405,7 @@ class Trainer:
         log.info('Run name: %s', run_name)
 
         # Create the State
+        log.debug(f"bigning debug 4 {torch.distributed.is_initialized()=}")
         self.state = State(
             rank_zero_seed=rank_zero_seed,
             algorithms=algorithms,
@@ -1418,6 +1422,7 @@ class Trainer:
             deepspeed_config=deepspeed_config,
             parallelism_config=parallelism_config,
         )
+        log.debug(f"bigning debug 5 {torch.distributed.is_initialized()=}")
         self.accumulate_train_batch_on_tokens = accumulate_train_batch_on_tokens
 
         # Console Logging
@@ -1765,6 +1770,7 @@ class Trainer:
         if self.state.fsdp_config is not None and self.state.fsdp_config.auto_wrap and not self.state.load_monolith_rank0_only:
             # Init with globally fixed seed so all HSDP replicas have the same initial weights
             with reproducibility.seed_context(self.state.rank_zero_seed):
+                log.debug(f"bigning debug 6 {torch.distributed.is_initialized()=}")
                 self.state.automicrobatch_fsdp_hook_handles, self.state.fsdp_modules = prepare_fsdp_module(
                     model,
                     optimizers,
@@ -1774,6 +1780,7 @@ class Trainer:
                     auto_microbatching,
                     self.state.seed,
                 )
+                log.debug(f"bigning debug 7 {torch.distributed.is_initialized()=}")
 
         # Configure Deepspeed
         if self.state.deepspeed_config is not None:
