@@ -2642,6 +2642,7 @@ class Trainer:
             # bigning debug no problem
 
             for batch_idx, self.state.batch in enumerate(self._iter_dataloader(TrainerMode.TRAIN)):
+                # bigning debug nccl timeout
                 # bigning debug
                 t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
                 log.debug("bigning debug manually all reduce")
