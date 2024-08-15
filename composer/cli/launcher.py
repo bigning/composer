@@ -412,6 +412,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                         a = datetime.datetime.now()
                         log.error(f'Rank {global_rank} crashed with exit code {process.returncode}. {a}')
                         process_has_crashed = True
+                        break
                     else:
                         # exited cleanly
                         log.info(f'Rank {global_rank} finished successfully.')
@@ -419,7 +420,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                         log.error(f'Rank {global_rank} finished successfully. {a}')
             if process_has_crashed or all_processes_finished:
                 break
-            time.sleep(0.1)
+            time.sleep(0.5)
     except KeyboardInterrupt:
         print('Ctrl-C received; terminating training processes.')
         pass
