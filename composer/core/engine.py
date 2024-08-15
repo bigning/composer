@@ -67,6 +67,7 @@ from __future__ import annotations
 
 import torch
 import pdb
+import threading
 import atexit
 import contextlib
 import logging
@@ -507,9 +508,10 @@ class Engine():
         callbacks = [callback for callback in self.state.callbacks if not isinstance(callback, LoggerDestination)]
         self._run_callbacks(event, callbacks)
 
-    """
     def __del__(self):
         log.debug(f'bigning debug del is called')
+        for thread in threading.enumerate():
+            log.debug(f"bigning debug engine del thread name: {thread.name}, thread info: {thread}")
         global _did_atexit_run
         if _did_atexit_run or self._is_closed:
             # Do not attempt to shutdown again, since close() already ran via __atexit__ or was already invoked
@@ -517,7 +519,6 @@ class Engine():
         self.close()
         atexit.unregister(_set_atexit_ran)
         atexit.unregister(self._close)
-    """
 
     def _debug_log(self, event: Event, msg: str):
         """Helper to include timestamp and event info in log messages."""
