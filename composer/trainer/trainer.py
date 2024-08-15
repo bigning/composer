@@ -2625,11 +2625,7 @@ class Trainer:
             raise RuntimeError('max_duration must be specified when initializing the Trainer')
 
         log.debug('Starting training loop')
-        # bigning debug
-        t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
-        log.debug("bigning debug manually all reduce")
-        torch.distributed.all_reduce(t)
-        return
+        # bigning debug no problem
         while self.state.timestamp < self.state.max_duration:
             if int(self.state.timestamp.epoch_in_iteration) == 0 and int(self.state.timestamp.batch_in_epoch) == 0:
                 self.engine.run_event(Event.ITERATION_START)
@@ -2642,6 +2638,12 @@ class Trainer:
             sampler = _get_distributed_sampler(dataloader) if isinstance(dataloader, DataLoader) else None
             if isinstance(sampler, DistributedSampler):
                 sampler.set_epoch(int(self.state.timestamp.epoch))
+
+            # bigning debug
+            t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
+            log.debug("bigning debug manually all reduce")
+            torch.distributed.all_reduce(t)
+            return
 
             for batch_idx, self.state.batch in enumerate(self._iter_dataloader(TrainerMode.TRAIN)):
                 # Spin dataloader forward unless dataloader handles internally with dataset_resumption
