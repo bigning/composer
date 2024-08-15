@@ -229,7 +229,11 @@ class Engine():
                         ),
                     )
 
-        atexit.register(self._close, state, logger)
+        def my_fun():
+            log.debug(f"bigning debug atexit run")
+            self._close(state, logger)
+
+        atexit.register(my_fun)
 
     def run_event(
         self,
