@@ -119,7 +119,7 @@ def _set_atexit_ran():
 
 # Since atexit calls hooks in LIFO order, this hook will always be invoked after all atexit-triggered
 # _close() calls are invoked
-#atexit.register(_set_atexit_ran)
+atexit.register(_set_atexit_ran)
 
 
 # Catch SIGTERM/SIGINT and instead exit via `sys.exit` using same error code, ensuring atexit
@@ -229,7 +229,7 @@ class Engine():
                         ),
                     )
 
-        #atexit.register(self._close, state, logger)
+        atexit.register(self._close, state, logger)
 
     def run_event(
         self,
