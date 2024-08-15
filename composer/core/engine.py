@@ -232,6 +232,7 @@ class Engine():
         def my_fun():
             log.debug(f"bigning debug atexit run")
             self._close(state, logger)
+            log.debug(f"bigning debug os exit")
             os._exit() 
 
         atexit.register(my_fun)
