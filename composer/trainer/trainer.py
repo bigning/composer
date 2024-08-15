@@ -2644,10 +2644,12 @@ class Trainer:
             for batch_idx, self.state.batch in enumerate(self._iter_dataloader(TrainerMode.TRAIN)):
                 # bigning debug nccl timeout
                 # bigning debug
+                """
                 t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
                 log.debug("bigning debug manually all reduce")
                 torch.distributed.all_reduce(t)
                 return
+                """
 
                 # Spin dataloader forward unless dataloader handles internally with dataset_resumption
                 if self.spin_dataloaders and 'train' not in self.state.dataset_resumption and batch_idx < int(
@@ -3870,7 +3872,7 @@ class Trainer:
                 iter_finished += 1
 
             # Sync iter finished across ranks
-            dist.all_reduce(iter_finished, reduce_operation='MAX')
+            #dist.all_reduce(iter_finished, reduce_operation='MAX')
             # If any rank has finished, stop all rank iterations
             if iter_finished.item() == 1:
                 break
