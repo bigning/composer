@@ -2646,7 +2646,8 @@ class Trainer:
                 # bigning debug
                 t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
                 log.debug("bigning debug manually all reduce")
-                torch.distributed.all_reduce(t)
+                #torch.distributed.all_reduce(t)
+                dist.all_reduce(t, reduce_operation='MAX')
                 return
 
                 # Spin dataloader forward unless dataloader handles internally with dataset_resumption
