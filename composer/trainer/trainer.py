@@ -2651,7 +2651,6 @@ class Trainer:
                 log.debug("bigning debug before tolist call")
                 a = t.tolist()
                 log.debug("bigning debug after tolist call")
-                
                 return
 
                 # Spin dataloader forward unless dataloader handles internally with dataset_resumption
