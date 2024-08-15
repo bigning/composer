@@ -404,7 +404,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                     # the process is still running
                     all_processes_finished = False
                     a = datetime.datetime.now()
-                    #log.error(f'bigning debug Rank {global_rank} is still running. {a}, pid: {process.pid}')
+                    log.error(f'bigning debug Rank {global_rank} is still running. {a}, pid: {process.pid}')
                     continue
                 else:
                     # return code of 0 implies clean exit
@@ -420,7 +420,7 @@ def _monitor_processes(processes: dict[int, subprocess.Popen]):
                         log.error(f'Rank {global_rank} finished successfully. {a}')
             if process_has_crashed or all_processes_finished:
                 break
-            time.sleep(0.5)
+            time.sleep(10)
     except KeyboardInterrupt:
         print('Ctrl-C received; terminating training processes.')
         pass
