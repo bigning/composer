@@ -2648,7 +2648,7 @@ class Trainer:
                 log.debug("bigning debug manually all reduce")
                 #torch.distributed.all_reduce(t)
                 dist.all_reduce(t, reduce_operation='MAX')
-                return
+                #return
 
                 # Spin dataloader forward unless dataloader handles internally with dataset_resumption
                 if self.spin_dataloaders and 'train' not in self.state.dataset_resumption and batch_idx < int(
