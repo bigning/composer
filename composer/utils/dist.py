@@ -589,7 +589,9 @@ def initialize_dist(device: Union[str, Device], timeout: float = 300.0) -> None:
         os.environ.update(dist_env_var_defaults)
         dist.init_process_group(device_obj.dist_backend, store=dist.HashStore(), world_size=1, rank=0)
     else:
-        dist.init_process_group(device_obj.dist_backend, timeout=timeout_timedelta)
+        log.debug(f"bigning debug {device_obj.dist_backend=}")
+        #dist.init_process_group(device_obj.dist_backend, timeout=timeout_timedelta)
+        dist.init_process_group(timeout=timeout_timedelta)
 
 
 def get_sampler(
