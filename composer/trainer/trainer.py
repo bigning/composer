@@ -2639,11 +2639,7 @@ class Trainer:
             if isinstance(sampler, DistributedSampler):
                 sampler.set_epoch(int(self.state.timestamp.epoch))
 
-            # bigning debug
-            t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
-            log.debug("bigning debug manually all reduce")
-            torch.distributed.all_reduce(t)
-            return
+            # bigning debug no problem
 
             for batch_idx, self.state.batch in enumerate(self._iter_dataloader(TrainerMode.TRAIN)):
                 # Spin dataloader forward unless dataloader handles internally with dataset_resumption
@@ -2655,6 +2651,12 @@ class Trainer:
                         reproducibility.load_rng_state(self._rng_state)
                         self._rng_state = None
                     continue
+
+                # bigning debug
+                t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
+                log.debug("bigning debug manually all reduce")
+                torch.distributed.all_reduce(t)
+                return
 
                 self.state.batch = self.state.device.batch_to_device(self.state.batch)
                 self.state.batch = self._train_data_spec.device_transforms(self.state.batch)
