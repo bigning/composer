@@ -2277,10 +2277,11 @@ class Trainer:
         """
 
 
-        # bigning debug no problem here
+        # bigning debug reproduce 
         # bigning debug 
         t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
         torch.distributed.all_reduce(t)
+        return
 
         # Check Optimizer
         if len(self.state.optimizers) == 0:
