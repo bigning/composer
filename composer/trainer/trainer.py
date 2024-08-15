@@ -2462,6 +2462,7 @@ class Trainer:
         # bigning debug no problem
         # bigning debug 
         t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        log.debug("bigning debug manually all reduce")
         torch.distributed.all_reduce(t)
         return
         self._train_loop()
