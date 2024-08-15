@@ -2649,6 +2649,8 @@ class Trainer:
                 #torch.distributed.all_reduce(t)
                 dist.all_reduce(t, reduce_operation='MAX')
                 log.debug("bigning debug before tolist call")
+                for name, value in os.environ.items():
+                    log.debug("bigning debug env variable {0}: {1}".format(name, value))
                 a = t.tolist()
                 log.debug("bigning debug after tolist call")
                 return
