@@ -131,8 +131,8 @@ def sigterm_handler(signal, frame):
 
 
 try:
-    #signal.signal(signal.SIGTERM, sigterm_handler)
-    #signal.signal(signal.SIGINT, sigterm_handler)
+    signal.signal(signal.SIGTERM, sigterm_handler)
+    signal.signal(signal.SIGINT, sigterm_handler)
     pass
 except ValueError:
     log.warning('Failed to set signal handler. Checkpoints may not be flushed if the process is killed.')
