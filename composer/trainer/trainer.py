@@ -2625,6 +2625,11 @@ class Trainer:
             raise RuntimeError('max_duration must be specified when initializing the Trainer')
 
         log.debug('Starting training loop')
+        # bigning debug
+        t = torch.tensor([2, 2, 3], device=f'cuda:{dist.get_local_rank()}')
+        log.debug("bigning debug manually all reduce")
+        torch.distributed.all_reduce(t)
+        return
         while self.state.timestamp < self.state.max_duration:
             if int(self.state.timestamp.epoch_in_iteration) == 0 and int(self.state.timestamp.batch_in_epoch) == 0:
                 self.engine.run_event(Event.ITERATION_START)
@@ -2672,11 +2677,8 @@ class Trainer:
                     self.logger.log_metrics({'time/token': self.state.timestamp.token.value})
                     self.logger.log_metrics({'time/token_in_epoch': self.state.timestamp.token_in_epoch.value})
 
-                # bigning debug 
-                t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-                log.debug("bigning debug manually all reduce")
-                torch.distributed.all_reduce(t)
-                return
+                # bigning debug nccl timeout
+
 
                 total_loss_dict = self._train_batch(use_grad_scaling)
 
