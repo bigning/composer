@@ -2277,11 +2277,7 @@ class Trainer:
         """
 
 
-        # bigning debug reproduce 
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        torch.distributed.all_reduce(t)
-        return
+        # bigning debug no problem 
 
         # Check Optimizer
         if len(self.state.optimizers) == 0:
@@ -2464,6 +2460,10 @@ class Trainer:
 
         self.first_batch_complete = False
         # bigning debug no problem
+        # bigning debug 
+        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+        torch.distributed.all_reduce(t)
+        return
         self._train_loop()
 
     def close(self):
