@@ -2460,11 +2460,6 @@ class Trainer:
 
         self.first_batch_complete = False
         # bigning debug no problem
-        # bigning debug 
-        t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
-        log.debug("bigning debug manually all reduce")
-        torch.distributed.all_reduce(t)
-        return
         self._train_loop()
 
     def close(self):
@@ -2676,6 +2671,12 @@ class Trainer:
                 if rank_num_tokens > 0:
                     self.logger.log_metrics({'time/token': self.state.timestamp.token.value})
                     self.logger.log_metrics({'time/token_in_epoch': self.state.timestamp.token_in_epoch.value})
+
+                # bigning debug 
+                t = torch.tensor([2], device=f'cuda:{dist.get_local_rank()}')
+                log.debug("bigning debug manually all reduce")
+                torch.distributed.all_reduce(t)
+                return
 
                 total_loss_dict = self._train_batch(use_grad_scaling)
 
