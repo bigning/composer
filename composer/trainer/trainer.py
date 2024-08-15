@@ -1826,6 +1826,7 @@ class Trainer:
 
         exception_rank = 0
         if dist.get_global_rank() == exception_rank:
+            torch.distributed.destroy_process_group()
             raise RuntimeError(f"bigning debug raise run time error or rank {exception_rank}, pid: {os.getpid()}")
 
         # Load Checkpoint
