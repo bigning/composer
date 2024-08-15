@@ -547,7 +547,6 @@ def initialize_dist(device: Union[str, Device], timeout: float = 300.0) -> None:
             )
         return
 
-    raise RuntimeError(f"bigning debug dist init")
 
     # If any of these variables are set, and they do not match the single rank defaults,
     # then do not automatically configure distributed. There are no reasonable defaults to infer
