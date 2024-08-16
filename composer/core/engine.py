@@ -233,7 +233,8 @@ class Engine():
             log.debug(f"bigning debug atexit run")
             self._close(state, logger)
             log.debug(f"bigning debug os exit")
-            os._exit(1) 
+            torch.distributed.destroy_process_group()
+            #os._exit(1) 
 
         atexit.register(my_fun)
 
