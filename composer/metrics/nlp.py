@@ -108,6 +108,7 @@ class LanguageCrossEntropy(Metric):
 
         total_items = (target != self.ignore_index).sum()
         self.total_items += total_items  #type: ignore (third-party)
+        log.debug(f"bigning debug composer metrics items: {total_items}") 
 
         # accumulate loss over all batches
         self.sum_loss += losses
