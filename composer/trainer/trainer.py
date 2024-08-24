@@ -2895,7 +2895,7 @@ class Trainer:
                 assert self.state.device_train_microbatch_size is not None
                 microbatches = self._train_data_spec.split_batch(device_batch, self.state.device_train_microbatch_size)
                 if self._use_closures():
-                    self._train_microbatches(microbatches, loss_dict)
+                    self._train_microbatches(microbatches, total_loss_dict)
                     log.debug(f"bigning debug {len(self.state.optimizers)=}")
                     """
                     for optimizer in self.state.optimizers:
