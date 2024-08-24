@@ -2903,18 +2903,23 @@ class Trainer:
                                 **kwargs: self._train_microbatches(microbatches, loss_dict, **kwargs),
                             )
                         else:
+                            pass
+                            """ 
                             optimizer.step(
                                 closure=lambda loss_dict=total_loss_dict,
                                 **kwargs: self._train_microbatches(microbatches, loss_dict, **kwargs).item(),
                             )
+                            """
                 else:
                     self._train_microbatches(microbatches, total_loss_dict)
                     if not self.state.deepspeed_enabled:
                         for optimizer in self.state.optimizers:
+                            """
                             if use_grad_scaling:
                                 self.state.scaler.step(optimizer)
                             else:
                                 optimizer.step()
+                            """
             except RuntimeError as e:
                 if self.state.auto_microbatching and str(e) == OOM_FOUND_ON_OTHER_RANK:
                     log.debug((f"A Different Rank OOM'd."))
