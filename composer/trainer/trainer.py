@@ -2718,13 +2718,11 @@ class Trainer:
                     for scheduler in self.state.schedulers:
                         scheduler.step()
 
-                """
                 if self.state.train_metrics is not None:  # pyright: ignore[reportUnnecessaryComparison]
                     self._compute_and_log_metrics(
                         dataloader_label='train',
                         metrics=self.state.train_metrics,
                     )
-                """
 
                 self.state.previous_timestamp = self.state.timestamp
                 self.state.timestamp = self.state.timestamp.to_next_batch(
@@ -2897,6 +2895,9 @@ class Trainer:
                 assert self.state.device_train_microbatch_size is not None
                 microbatches = self._train_data_spec.split_batch(device_batch, self.state.device_train_microbatch_size)
                 if self._use_closures():
+                    self._train_microbatches(microbatches, loss_dict)
+                    log.debug(f"bigning debug {len(self.state.optimizers)=}")
+                    """
                     for optimizer in self.state.optimizers:
                         if use_grad_scaling:
                             self.state.scaler.step(
@@ -2905,17 +2906,16 @@ class Trainer:
                                 **kwargs: self._train_microbatches(microbatches, loss_dict, **kwargs),
                             )
                         else:
-                            pass
-                            """ 
                             optimizer.step(
                                 closure=lambda loss_dict=total_loss_dict,
                                 **kwargs: self._train_microbatches(microbatches, loss_dict, **kwargs).item(),
                             )
-                            """
+                    """
                 else:
                     self._train_microbatches(microbatches, total_loss_dict)
                     if not self.state.deepspeed_enabled:
                         for optimizer in self.state.optimizers:
+                            pass
                             """
                             if use_grad_scaling:
                                 self.state.scaler.step(optimizer)
