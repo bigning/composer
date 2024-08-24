@@ -2718,11 +2718,13 @@ class Trainer:
                     for scheduler in self.state.schedulers:
                         scheduler.step()
 
+                """
                 if self.state.train_metrics is not None:  # pyright: ignore[reportUnnecessaryComparison]
                     self._compute_and_log_metrics(
                         dataloader_label='train',
                         metrics=self.state.train_metrics,
                     )
+                """
 
                 self.state.previous_timestamp = self.state.timestamp
                 self.state.timestamp = self.state.timestamp.to_next_batch(
