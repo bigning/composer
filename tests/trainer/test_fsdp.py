@@ -13,6 +13,7 @@ from torch.utils.data import DataLoader, Dataset
 from composer.models import ComposerClassifier, ComposerModel
 from composer.trainer.trainer import Trainer, _fsdp_reshard_and_cleanup
 from composer.utils import dist
+from composer.utils.parallelism import FSDPConfig
 from tests.common import (
     EmbeddedWeightTiedModel,
     RandomClassificationDataset,
@@ -326,32 +327,6 @@ def test_fsdp_automicrobatching_sync_hooks(world_size: int):
 
 @pytest.mark.gpu
 @world_size(2)
-@pytest.mark.filterwarnings('ignore:Instantiating FSDP with custom process groups.*:UserWarning')
-@pytest.mark.filterwarnings('ignore:Composer is instantiating custom process groups.*:UserWarning')
-@pytest.mark.filterwarnings('ignore:.*process_group and device_mesh are set for FSDP.*.:UserWarning')
-def test_fsdp_process_group(world_size: int):
-    model = SimpleModel()
-    model.fc1._fsdp_wrap = True  # pyright: ignore[reportGeneralTypeIssues]
-    model.fc2._fsdp_wrap = True  # pyright: ignore[reportGeneralTypeIssues]
-    dataset = RandomClassificationDataset(size=10)
-    dataloader = DataLoader(dataset, sampler=dist.get_sampler(dataset))
-
-    trainer = Trainer(
-        model=model,
-        train_dataloader=dataloader,
-        parallelism_config={
-            'fsdp': {
-                'process_group': 'mod1',  # all ranks
-            },
-        },
-        max_duration='3ba',
-    )
-
-    trainer.fit()
-
-
-@pytest.mark.gpu
-@world_size(2)
 @pytest.mark.skipif(
     version.parse(torch.__version__) < version.parse('2'),
     reason='FSDP use_orig_params requires torch 2.0 or higher',
@@ -584,8 +559,8 @@ def test_fsdp_device_mesh(world_size: int):
     model.fc1._fsdp_wrap = True  # pyright: ignore[reportGeneralTypeIssues]
     model.fc2._fsdp_wrap = True  # pyright: ignore[reportGeneralTypeIssues]
 
-    # Expect warning via pytest
-    with pytest.warns(DeprecationWarning):
+    # Expect error via pytest
+    with pytest.raises(ValueError, match='Directly specifying device mesh for FSDP was deprecated*'):
         Trainer(
             model=model,
             parallelism_config={'fsdp': {
@@ -593,6 +568,16 @@ def test_fsdp_device_mesh(world_size: int):
             }},
             max_duration='3ba',
         )
+
+
+@pytest.mark.parametrize('error_key', ['device_mesh', '_device_mesh'])
+def test_fsdp_config_device_mesh_error(error_key: str):
+    # Passing device mesh directly to FSDPConfig should raise an error
+    with pytest.raises(ValueError, match='Directly specifying device mesh for FSDP was deprecated*'):
+        cfg_dict = {
+            error_key: [2],
+        }
+        FSDPConfig(**cfg_dict)
 
 
 @pytest.mark.gpu
