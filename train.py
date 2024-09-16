@@ -48,4 +48,4 @@ from composer.loggers import MLFlowLogger
 dist.initialize_dist(get_device(None), timeout=300)
 
 
-print("haha done on rank: {dist.get_global_rank()}")
+print(f"haha done on rank: {dist.get_global_rank()}")
