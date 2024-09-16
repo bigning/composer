@@ -48,7 +48,7 @@ from composer.loggers import MLFlowLogger
 dist.initialize_dist(get_device(None), timeout=300)
 
 
-t = torch.tensor([1.0], device=f"gpu:dist.get_global_rank()")
+t = torch.tensor([1.0], device=f"cuda:{dist.get_global_rank()}")
 t1 = torch.distributed.all_reduce(t)
 
 print(f"haha done on rank: {dist.get_global_rank()}, {t1}")
