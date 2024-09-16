@@ -1,0 +1,14 @@
+awscli
+boto3
+mlflow
+pynvml
+transformers
+evaluate
+accelerate
+datasets
+scanpy
+scikit-learn
+python-box
+mosaicml
+mosaicml[mlflow]
+mosaicml-streaming
