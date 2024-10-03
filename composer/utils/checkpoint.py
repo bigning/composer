@@ -608,7 +608,7 @@ def dist_cp_load(
                 from torch.distributed.checkpoint._nested_dict import flatten_state_dict
                 from torch.distributed.checkpoint._traverse import traverse_state_dict
                 import inspect
-                mystate_dict = flatten_state_dict(state_dict)
+                mystate_dict, _ = flatten_state_dict(state_dict)
                 for key in mystate_dict.keys():
                     if "state.callback" in key:
                         log.info(f"bigning debug in my state dict, not load planner {key=}")
