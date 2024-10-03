@@ -605,22 +605,12 @@ def dist_cp_load(
                 metadata: Optional[Metadata] = None,
                 is_coordinator: bool = False,
             ) -> None:
-                _init_state_dict(state_dict)
-                self.original_state_dict = state_dict
-
+                super().set_up_planner(state_dict, metadata, is_coordinator)
                 log.info(f"bigning debug in my planner {self.flatten_sharded_tensors=}")
-                if self.flatten_sharded_tensors:
-                    state_dict = _flatten_sharded_tensors(state_dict)
-                for key in state_dict.keys():
+                for key in self.state_dict.keys():
                     if "state.callback" in key:
                         log.info(f"bigning debug in my load planner {key=}")
 
-                if self.flatten_state_dict:
-                    state_dict, self.mappings = flatten_state_dict(state_dict)
-
-                self.state_dict = state_dict
-                self.metadata = metadata
-                self.is_coordinator = is_coordinator
         if load_planner is not None:
             log.info(f"bigning debug non default load planner: {load_planner=}, {torch.__version__=}")
         else:
