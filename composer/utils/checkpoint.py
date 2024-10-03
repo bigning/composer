@@ -597,6 +597,35 @@ def dist_cp_load(
 ):
     if version.parse(torch.__version__) >= version.parse('2.4.0'):
         from torch.distributed.checkpoint.utils import CheckpointException
+        from torch.distributed.checkpoint.default_planner import DefaultLoadPlanner
+        class MyLoadPlanner(DefaultLoadPlanner):
+            def set_up_planner(
+                self,
+                state_dict: STATE_DICT_TYPE,
+                metadata: Optional[Metadata] = None,
+                is_coordinator: bool = False,
+            ) -> None:
+                _init_state_dict(state_dict)
+                self.original_state_dict = state_dict
+
+                log.info(f"bigning debug in my planner {self.flatten_sharded_tensors=}")
+                if self.flatten_sharded_tensors:
+                    state_dict = _flatten_sharded_tensors(state_dict)
+                for key in state_dict.keys():
+                    if "state.callback" in key:
+                        log.info(f"bigning debug in my load planner {key=}")
+
+                if self.flatten_state_dict:
+                    state_dict, self.mappings = flatten_state_dict(state_dict)
+
+                self.state_dict = state_dict
+                self.metadata = metadata
+                self.is_coordinator = is_coordinator
+        if load_planner is not None:
+            log.info(f"bigning debug non default load planner: {load_planner=}, {torch.__version__=}")
+        else:
+            log.info(f"bigning debug use my load planner")
+            load_planner = MyLoadPlanner()
         try:
             dist_cp.load(
                 state_dict=state_dict,
@@ -605,7 +634,9 @@ def dist_cp_load(
             )
         except CheckpointException as e:
             checkpoint_metadata = storage_reader.read_metadata().state_dict_metadata
-            log.info(f"bigning debug {checkpoint_metadata.keys()=}")
+            for key in checkpoint_metadata.keys():
+                if "state.callbacks" in key:
+                    log.info(f"bigning debug checkpoint metadata {key=}")
             if 'state.metadata' in checkpoint_metadata and 'state.metadata.composer_env_info.composer_version' not in checkpoint_metadata:
                 # Torch 2.4 changed the way how state dict is flattened. It broke backward compatibility.
                 # Torch issue: https://github.com/pytorch/pytorch/issues/133923.
