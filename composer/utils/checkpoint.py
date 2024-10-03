@@ -605,6 +605,17 @@ def dist_cp_load(
                 metadata: Optional[Metadata] = None,
                 is_coordinator: bool = False,
             ) -> None:
+                from torch.distributed.checkpoint._nested_dict import flatten_state_dict
+                from torch.distributed.checkpoint._traverse import traverse_state_dict
+                import inspect
+                mystate_dict = flatten_state_dict(state_dict)
+                for key in mystate_dict.keys():
+                    if "state.callback" in key:
+                        log.info(f"bigning debug in my state dict, not load planner {key=}")
+                
+                log.info(f"bigning debug func code {inspect.getsource(flatten_state_dict)=}")
+                log.info(f"bigning debug func code {inspect.getsource(traverse_state_dict)=}")
+
                 super().set_up_planner(state_dict, metadata, is_coordinator)
                 log.info(f"bigning debug in my planner {self.flatten_sharded_tensors=}")
                 for key in self.state_dict.keys():
@@ -614,7 +625,7 @@ def dist_cp_load(
         if load_planner is not None:
             log.info(f"bigning debug non default load planner: {load_planner=}, {torch.__version__=}")
         else:
-            log.info(f"bigning debug use my load planner")
+            log.info(f"bigning debug use my load planner, {torch.__version__=}")
             load_planner = MyLoadPlanner()
         try:
             dist_cp.load(
